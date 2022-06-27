@@ -43,7 +43,7 @@ const AuthModal: React.FC = () => {
               <OAuthButtons />
               <Flex align="center">
                 <Divider w="100px" />
-                <Text padding="2" color="gray.400" fontWeight={700}>
+                <Text padding="2" color="gray.500" fontWeight={700}>
                   OR
                 </Text>
                 <Divider w="100px" />
