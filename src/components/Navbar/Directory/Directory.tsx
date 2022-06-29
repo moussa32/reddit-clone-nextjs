@@ -2,6 +2,7 @@ import { Flex, Icon, Menu, MenuButton, MenuList, Text } from "@chakra-ui/react";
 import React from "react";
 import { IoIosArrowDown } from "react-icons/io";
 import { HiHome } from "react-icons/hi";
+import Communities from "./Communities";
 
 const Directory: React.FC = () => {
   return (
@@ -24,7 +25,9 @@ const Directory: React.FC = () => {
           <Icon as={IoIosArrowDown} color="gray.400" />
         </Flex>
       </MenuButton>
-      <MenuList>{/*<Communities/> */}Communities</MenuList>
+      <MenuList>
+        <Communities />
+      </MenuList>
     </Menu>
   );
 };
