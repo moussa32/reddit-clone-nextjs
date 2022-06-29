@@ -1,6 +1,5 @@
 import React from "react";
 import { FaRedditSquare } from "react-icons/fa";
-import { ChevronDownIcon } from "@chakra-ui/icons";
 import { VscAccount } from "react-icons/vsc";
 import { IoSparkles, IoLogInOutline } from "react-icons/io5";
 import { CgProfile } from "react-icons/cg";
