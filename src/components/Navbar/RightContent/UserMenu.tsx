@@ -38,7 +38,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
         _hover={{ outline: "1px solid", outlineColor: "gray.200" }}
       >
         <Flex align="center">
-          <Flex align="center" minWidth={{ base: "auto", md: 180 }}>
+          <Flex align="center" minWidth={{ base: "auto", md: user ? 180 : "auto" }}>
             {user ? (
               <>
                 <Avatar
@@ -68,9 +68,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
             ) : (
               <Icon fontSize={24} color="gray.400" mr={1} as={VscAccount} />
             )}
-            <Box ml="auto" color="gray.400">
-              <IoIosArrowDown size={"1.2rem"} />
-            </Box>
+            <Icon as={IoIosArrowDown} color="gray.400" ml="auto" />
           </Flex>
         </Flex>
       </MenuButton>
