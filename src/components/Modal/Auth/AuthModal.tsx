@@ -9,7 +9,7 @@ import {
   ModalOverlay,
   Text,
 } from "@chakra-ui/react";
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useRecoilState } from "recoil";
 import { authModalState } from "../../../atoms/authModalAtom";
@@ -22,17 +22,18 @@ const AuthModal: React.FC = () => {
   const [modalState, setModalState] = useRecoilState(authModalState);
   const [user, loading, error] = useAuthState(auth);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setModalState((prev) => ({
       ...prev,
       open: false,
     }));
-  };
+  }, [setModalState]);
 
   useEffect(() => {
-    if (user) handleClose();
-    console.log(user);
-  }, [user]);
+    if (user) {
+      handleClose();
+    }
+  }, [user, handleClose]);
 
   return (
     <>
