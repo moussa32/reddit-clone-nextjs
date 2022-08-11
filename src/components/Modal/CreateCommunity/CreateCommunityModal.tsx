@@ -20,7 +20,7 @@ import {
 import { BsFillEyeFill, BsFillPersonFill } from "react-icons/bs";
 import { HiLockClosed } from "react-icons/hi";
 import React, { useState } from "react";
-import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
+import { doc, runTransaction, serverTimestamp } from "firebase/firestore";
 import { firestore, auth } from "../../../firebase/clientApp";
 import { useAuthState } from "react-firebase-hooks/auth";
 
@@ -64,17 +64,26 @@ const CreateCommunityModal: React.FC<CreateCommunityModalProps> = ({ open, handl
     setLoading(true);
     try {
       const communityDocRef = doc(firestore, "communities", communityName);
-      const communityDoc = await getDoc(communityDocRef);
 
-      if (communityDoc.exists()) {
-        throw new Error(`Sorry, r/${communityName} is already taken. Try another.`);
-      }
+      await runTransaction(firestore, async (transaction) => {
+        const communityDoc = await transaction.get(communityDocRef);
 
-      await setDoc(communityDocRef, {
-        creatorId: user?.uid,
-        createdAt: serverTimestamp(),
-        numberOfMembers: 1,
-        privacyType: communityType,
+        if (communityDoc.exists()) {
+          throw new Error(`Sorry, r/${communityName} is already taken. Try another.`);
+        }
+
+        transaction.set(communityDocRef, {
+          creatorId: user?.uid,
+          createdAt: serverTimestamp(),
+          numberOfMembers: 1,
+          privacyType: communityType,
+        });
+
+        //Create communitySnippet on user
+        transaction.set(doc(firestore, `users/${user?.uid}/communitySnippets`, communityName), {
+          communityId: communityName,
+          isModerator: true,
+        });
       });
 
       toast({
@@ -178,7 +187,13 @@ const CreateCommunityModal: React.FC<CreateCommunityModalProps> = ({ open, handl
             <Button variant="outline" height="30px" mr={3} onClick={handleClose}>
               Cancel
             </Button>
-            <Button variant="solid" height="30px" onClick={handleCreateCommunity} isLoading={loading}>
+            <Button
+              variant="solid"
+              height="30px"
+              onClick={handleCreateCommunity}
+              isLoading={loading}
+              _hover={{ display: "flex" }}
+            >
               Create community
             </Button>
           </ModalFooter>
